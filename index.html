@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dist/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>NinjaNoc</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 alert alert-check">
+                <div id="info" class="alert h4 text-center" role="alert">
+                    This is a primary alert—check it out!
+                </div>
+                <div id="danger" class="alert h5 text-center alert-danger hidden" role="alert">
+                    This is a primary alert—check it out!
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <div id="statPlayer1" class="card bg-dark text-white mb-3"></div>
+            </div>
+            <div class="col-6 d-flex justify-content-center">
+                <canvas id="canvas" width="500" height="500">
+                    <p>Désolé, votre navigateur ne supporte pas Canvas. Veuillez mettre à jour votre navigateur</p>
+                </canvas>
+
+                <div style="display: none;">
+                    <img id="stone" src="dist/img/Elements/stone.png" alt="Image Rocher">
+                    <img id="stick" src="dist/img/Weapons/stick.png" alt="Baton">
+                    <img id="dagger" src="dist/img/Weapons/Dagger.png" alt="Dagues">
+                    <img id="dualSword" src="dist/img/Weapons/dualSword.png" alt="Double épée">
+                    <img id="pugilat" src="dist/img/Weapons/Pugilat.png" alt="Pugilat">
+                    <img id="sword" src="dist/img/Weapons/sword.png" alt="Epée">
+                    <img id="player1" src="dist/img/Personnage/NinjaNoir.png" alt="Player 1">
+                    <img id="player2" src="dist/img/Personnage/NinjaRouge.png" alt="Player 2">
+                </div>
+            </div>
+            <div class="col-3">
+                <div id="statPlayer2" class="card bg-dark text-white mb-3"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center mt-3 mb-3">
+                <div id="action">
+                    <button type="button" id="attack" class="btn btn-danger">Attaquer</button>
+                    <button type="button" id="defend" class="btn btn-success">Défendre</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="dist/js/helper.js"></script>
+    <script src="dist/js/stone.js"></script>
+    <script src="dist/js/weapon.js"></script>
+    <script src="dist/js/player.js"></script>
+    <script src="dist/js/map.js"></script>
+    <script src="dist/js/game.js"></script>
+    <script>
+        //Empêche l'exécution du code avant le chargement complet de tous les éléments de la page
+        window.onload = () => {
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            if (!canvas) {
+                throw new Error('Impossible de récupérer le canvas');
+            }
+
+            if (!context) {
+                throw new Error('Impossible de récupérer le context du canvas');
+            }
+
+            // Initialise le jeu
+            game.init(context);
+
+
+            canvas.addEventListener('click', e => {
+                var x = Math.trunc(e.offsetX / 50);
+                var y = Math.trunc(e.offsetY / 50);
+
+                if (game.checkMoveTo(x, y)) { // Vérifie le déplacement
+                    game.activePlayer.moveTo(map.board, x, y); // Le joueur se déplace
+                    game.whoNext(); // On incrémente le counter pour changer de joueur.
+                    game.information(); // On affiche les nouvelles informations.
+                    map.delete(context); // On met à jour la map
+                    map.display(context);
+                }
+
+                if (game.battle()) {// Si il y a combat, les joueurs on accés aux actions.
+                    game.actions();
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
