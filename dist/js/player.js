@@ -11,7 +11,7 @@ class Player {
         this.id = id;
         this.weapon = weapon;
         this.defend = Boolean;
-        this.sante = 10;
+        this.sante = 100;
 
     }
     /**
